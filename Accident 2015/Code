@@ -1,0 +1,88 @@
+
+Create table Accidents
+(S_No INT,
+Accident_Index Varchar(50),
+Location_Easting_OSGR INT,
+Location_Northing_OSGR INT,
+Longitude Number(8,8),
+Latitude NUmber(8,8),
+Police_Force INT,
+Accident_Severity INT,
+Number_of_Vehicles INT,
+Number_of_Casualties INT,
+Date DATE,
+Day_of_Week INT,
+Time Time,
+Local_Authority_District INT,
+Local_Authority_Highway Varchar(50),
+first_Road_Class INT,
+first_Road_Number INT,
+Road_Type INT,
+Speed_limit INT,
+Junction_Detail INT,
+Junction_Control INT,
+second_Road_Class INT,
+Second_Road_Number INT,
+Pedestrian_Crossing_Human_Control INT,
+Pedestrian_Crossing_Physical_Facilities INT,
+Light_Conditions INT,
+Weather_Conditions INT,
+Road_Surface_Conditions INT,
+Special_Conditions_at_Site INT,
+Carriageway_Hazards INT,
+Urban_or_Rural_Area INT,
+Did_Police_Officer_Attend_Scene_of_Accident INT,
+LSOA_of_Accident_Location varchar(50));
+
+Select * from Accidents;
+
+Create Table Vechile(
+S_No INT,
+Accident_Index Varchar(50),
+Vehicle_Reference INT,
+Vehicle_Type INT,
+Towing_and_Articulation INT,
+Vehicle_Manoeuvre INT,
+"Vehicle_Location-Restricted_Lane" INT,
+Junction_Location INT,
+Skidding_and_Overturning INT,
+Hit_Object_in_Carriageway INT,
+Vehicle_Leaving_Carriageway INT,
+Hit_Object_off_Carriageway INT,
+"1st_Point_of_Impact" INT,
+"Was_Vehicle_Left_Hand_Drive?" INT,
+Journey_Purpose_of_Driver INT,
+Sex_of_Driver INT,
+Age_of_Driver INT,
+Age_Band_of_Driver INT,
+"Engine_Capacity_(CC)" INT,
+Propulsion_Code INT,
+Age_of_Vehicle INT,
+Driver_IMD_Decile INT,
+Driver_Home_Area_Type INT,
+Vehicle_IMD_Decile INT
+);
+
+Create table Vechile_type(
+"Code" INT,
+Label Varchar(50)
+);
+
+CREATE INDEX accident_index
+ON accidents(accident_index);
+
+--------------------------------Evaluate the median severity value of accidents caused by various Motorcycles.------------------------------
+select Median(a.Accident_Severity) as Median_Severity,vt.label as Vehicle_type from vechile v inner join vechile_type vt on v.Vehicle_Type = vt.codes inner join accidents a on v.accident_index = a.accident_index
+Where Left(vt.Label,10) = 'Motorcycle' Group by vt.Label;
+
+--------------------------------Evaluate Accident Severity and Total Accidents per Vehicle Type---------------------------------------------
+select Sum(a.Accident_Severity) as Total_Severity,Count(v.Vehicle_type) as Total_Accident,vt.label as Vechile_type from vechile v inner join vechile_type vt on v.Vehicle_Type = vt.codes inner join accidents a on v.accident_index = a.accident_index
+Group by vt.Label;
+
+--------------------------------Calculate the Average Severity by vehicle type.---------------------------------------------
+select AVG(a.Accident_Severity) as Average_Severity,vt.label as Vehicle_type from vechile v inner join vechile_type vt on v.Vehicle_Type = vt.codes inner join accidents a on v.accident_index = a.accident_index
+Group by vt.Label;
+
+--------------------------------Calculate the Average Severity and Total Accidents by Motorcycle.------------------------------
+select AVG(a.Accident_Severity) as Average_Severity,vt.label,Count(v.Vehicle_type) as Total_Accident,vt.label from vechile v inner join vechile_type vt on v.Vehicle_Type = vt.codes inner join accidents a on v.accident_index = a.accident_index
+Where Left(vt.Label,10) = 'Motorcycle' Group by vt.Label;
